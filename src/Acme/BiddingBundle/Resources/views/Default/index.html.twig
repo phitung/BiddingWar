@@ -1,11 +1,9 @@
- {# src/Acme/BiddingBundle/Resources/views/Default/addBid.html.twig #}
+ {# src/Acme/BiddingBundle/Resources/views/Default/index.html.twig #}
  {% extends '::base.html.twig' %}
  {% block body %}
  <div class="row-fluid">
  	<div class="span6 offset3">
 		 <h3 style="font-size:24px;">Welcome <span  style="font-size:26px;"class="success"> {{name}}</span>, feel free to place your bid. </h3>
-		 
-		
 		 <table class="table table-bordered">
 		 	<THEAD>
 		 		<th> Name</th>
@@ -19,25 +17,17 @@
 		 		<td> {{ items.name }} </td>
 		 		<td> $ {{ items.price }} </td>
 		 		<td> {{ items.time }} </td>
-			
 		 	</tr>
-		 
 		 {% endfor %}
 		 </TBODY>
 		</table>
 		<center>
-		
-		Current minimum bid:<br /> <span style="font-size:30px;" class="error">$<span id="current_bid">{{price}}</span></span><br /> <a class="btn btn-primary" href="" id="place_bid" onclick="javascript:return false;">Place a bid</a>
+			Current minimum bid:<br /> <span style="font-size:30px;" class="error">$<span id="current_bid">{{price}}</span></span><br /> <a class="btn btn-primary" href="" id="place_bid" onclick="javascript:return false;">Place a bid</a>
 		</center>
 	</div>
 </div>
-
-
-  
-  <script type="text/javascript">
- 
+<script type="text/javascript">
 	  $('#place_bid').click(function() {
-	  
 		  var c_bid =  $('#current_bid').text();
 		  var query = "";
 		  $.ajax({
@@ -56,10 +46,5 @@
 		 });
 	  
 	  });
-
-
-  
   </script>
-  
-  
-    {% endblock %}
+{% endblock %}
