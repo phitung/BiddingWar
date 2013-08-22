@@ -7,36 +7,28 @@
          <link href="/bundles/css/main.css" rel="stylesheet">
         {% block stylesheets %}{% endblock %}
         
-               <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  		<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 
         <script src="http://www.phitung.com:3000/socket.io/socket.io.js"></script>
 		<script>
-	   var socket = io.connect('http://www.phitung.com:3000');
-	  socket.on('update-bids', function (data) {
+	   		var socket = io.connect('http://www.phitung.com:3000');
+	  		socket.on('update-bids', function (data) {
 	  
-	  	if(data){
-	  		
-	  		var history = data.history;
-	  		var current_bid = data.next_bid_price;
-	  		var new_html = ""
-	  		
-	  		var dlen = history.length;
-	  		for(i=0;i<dlen;i++){
-	  			
-	  			new_html += "<tr><td>" + history[i].name + "</td><td>$" + history[i].price + "</td><td>" + history[i].time + "</td></tr>";
-	  			
-
-	  		}
-
-	  		
-	  		$("#bid_history").html(new_html);
-	  		$("#current_bid").html(current_bid);
-	  		
-	  	}
-	    //console.log(data);
-	  });
-	</script>
+			  	if(data){
+			
+			  		var history = data.history;
+			  		var current_bid = data.next_bid_price;
+			  		var new_html = ""
+			  		for(i=0;i<history.length;i++){	
+			  			new_html += "<tr><td>" + history[i].name + "</td><td>$" + history[i].price + "</td><td>" + history[i].time + "</td></tr>";
+			  		}
+		
+			  		$("#bid_history").html(new_html);
+			  		$("#current_bid").html(current_bid);
+			  	}
+	  		});
+		</script>
         
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
