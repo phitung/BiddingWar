@@ -2,7 +2,7 @@
 
 namespace Acme\BiddingBundle\Controller;
 
-use Acme\BiddingBundle\Document\Bidding;
+use Acme\BiddingBundle\Document\Bid;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
