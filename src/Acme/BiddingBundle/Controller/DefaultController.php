@@ -48,7 +48,6 @@ class DefaultController extends Controller
 							'price'=>number_format($bid->getPrice()),
 							'time'=>$bid->getTime()->format('Y-m-d h:i:s')
 							);
-
 			$i++;
 		}
 
@@ -91,9 +90,7 @@ class DefaultController extends Controller
 		// retrieve the last 10 records order by time insert DESC
 		$bids = $this->retrieveRecentBids();
 		 
-		$data = array();
-		 
-		$i = 0;
+		$data = array(); 
 		foreach ($bids as $bid){
 
 			$data[] = array(
@@ -102,8 +99,6 @@ class DefaultController extends Controller
 					'price'=>number_format($bid->getPrice()),
 					'time'=>$bid->getTime()->format('Y-m-d h:i:s'),
 			);
-
-			$i++;
 		}
 
 		asort($data);
