@@ -1,5 +1,5 @@
 <?php
-// src/Acme/BiddingBundle/Document/Bidding.php
+// src/Acme/BiddingBundle/Document/Bid.php
 namespace Acme\BiddingBundle\Document;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
