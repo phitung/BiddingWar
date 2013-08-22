@@ -19,24 +19,20 @@ class DefaultController extends Controller
 	 * @Template()
 	 * @return array
 	 */
-	public function indexAction($name="")
+	public function indexAction()
 	{
 		// get the session
 		$session = $this->getRequest()->getSession();
 		
 		// get name if exists otherwise assign a random one
-		if($session->get('name')){
-			$name = $session->get('name');
-		}else{
+		$name = $session->get('name');
+		if(!$name){
 			$session->set('name', 'Guest_' . rand(1000,9999));
 			$name = $session->get('name');
 		}
 		 
 		// retrieve the last 10 records order by time insert DESC
-		$bids = $this->get('doctrine_mongodb')->getManager()
-		->createQueryBuilder('AcmeBiddingBundle:Bidding')
-		->limit(10)->sort('time', 'DESC')
-		->getQuery()->execute();
+		$bids = $this->retrieveRecentBids();
 		 
 		$data = array();
 		$i = 0;
@@ -44,7 +40,7 @@ class DefaultController extends Controller
 
 			// get the lastest bid price
 			if($i<1){
-				$cuttent_bid_price = $bid->getPrice();
+				$currentBidPrice = $bid->getPrice();
 			}
 			$data[] = array(
 							'id'=>$bid->getId(),
@@ -59,8 +55,8 @@ class DefaultController extends Controller
 		asort($data);
 		 
 		// set the next bid price to be plus 5
-		$next_bid_price = $cuttent_bid_price + 5;
-		return array('name' => $name,'price'=>$next_bid_price,'data'=>$data);
+		$nextBidPrice = $currentBidPrice + 5;
+		return array('name' => $name,'price'=>$nextBidPrice,'data'=>$data);
 	}
 
 
@@ -75,17 +71,15 @@ class DefaultController extends Controller
 	{
 		// get the session
 		$session = $this->getRequest()->getSession();
+		
+		$name = $session->get('name');
 
-		if($session->get('name')){
-
-			$name = $session->get('name');
-		}else{
-
-			// stop here
+		if(!$name){
+			return JsonResponse(array('success' => false));
 		}
 		 
-		 
-		$bid = new Bidding();
+		// insert new bid 
+		$bid = new Bid();
 		$bid->setName($name);
 		$bid->setPrice($price);
 		$bid->setTime(new \DateTime());
@@ -94,10 +88,8 @@ class DefaultController extends Controller
 		$dm->persist($bid);
 		$dm->flush();
 
-		$bids = $this->get('doctrine_mongodb')->getManager()
-		->createQueryBuilder('AcmeBiddingBundle:Bidding')
-		->limit(10)->sort('time', 'DESC')
-		->getQuery()->execute();
+		// retrieve the last 10 records order by time insert DESC
+		$bids = $this->retrieveRecentBids();
 		 
 		$data = array();
 		 
@@ -115,30 +107,49 @@ class DefaultController extends Controller
 		}
 
 		asort($data);
+		
 		// loop one more time to reverse the bids order (newest at the bottom)
-		$new_data = array();
-		foreach($data as $n_data){
+		$newData = array();
+		foreach($data as $ndata){
 
-			$new_data[] = $n_data;
+			$newData[] = $ndata;
 
 		}
 		 
-		$next_bid_price = $price + 5;
+		$nextBidPrice = $price + 5;
 
+		// get rabbitmq config values
 		$host = $this->container->getParameter('rabbitmq.host');
 		$port = $this->container->getParameter('rabbitmq.port');
 		$user = $this->container->getParameter('rabbitmq.user');
 		$pass = $this->container->getParameter('rabbitmq.pass');
 		$vhost = $this->container->getParameter('rabbitmq.vhost');
 		 
+		// publish the bid history and next bid price to exchange
 		$producer = new \Thumper\Producer($host, $port, $user, $pass, $vhost);
 		$producer->setExchangeOptions(array('name' => 'logs-exchange', 'type' => 'topic'));
-		$producer->publish(json_encode(array('history'=>$new_data,'next_bid_price'=>$next_bid_price)));
+		$producer->publish(json_encode(array('history'=>$newData,'next_bid_price'=>$nextBidPrice)));
 		 
 		 
 		return new JsonResponse(array('success' => true));
 		 
 	}
+	
+	/**
+	 * Retrieve the 10 most recent bids
+	 *
+	 * @return array<Bidding>
+	 * 
+	 */
+	 protected function retrieveRecentBids()
+	 {
+		 $bids = $this->get('doctrine_mongodb')->getManager()
+		 				->createQueryBuilder('AcmeBiddingBundle:Bidding')
+		 				->limit(10)->sort('time', 'DESC')
+		 				->getQuery()->execute();
+		
+		 return $bids;
+	 }
 
 	 
 }
