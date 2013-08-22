@@ -139,7 +139,7 @@ class DefaultController extends Controller
 	 protected function retrieveRecentBids()
 	 {
 		 $bids = $this->get('doctrine_mongodb')->getManager()
-		 				->createQueryBuilder('AcmeBiddingBundle:Bidding')
+		 				->createQueryBuilder('AcmeBiddingBundle:Bid')
 		 				->limit(10)->sort('time', 'DESC')
 		 				->getQuery()->execute();
 		
