@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+         <link href="/bundles/css/main.css" rel="stylesheet">
+        {% block stylesheets %}{% endblock %}
+        
+               <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+
+        <script src="http://www.phitung.com:3000/socket.io/socket.io.js"></script>
+		<script>
+	   var socket = io.connect('http://www.phitung.com:3000');
+	  socket.on('update-bids', function (data) {
+	  
+	  	if(data){
+	  		
+	  		var history = data.history;
+	  		var current_bid = data.current_bid;
+	  		var new_html = ""
+	  		
+	  		var dlen = history.length;
+	  		for(i=0;i<dlen;i++){
+	  			
+	  			new_html += "<tr><td>" + history[i].name + "</td><td>$" + history[i].price + "</td><td>" + history[i].time + "</td></tr>";
+	  			
+
+	  		}
+
+	  		
+	  		$("#bid_history").html(new_html);
+	  		$("#current_bid").html(current_bid);
+	  		
+	  	}
+	    //console.log(data);
+	  });
+	</script>
+        
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+      <div id="wrap">
+  			<div class="navbar-wrapper">
+		      <div class="container-fluid">
+		      
+		      <div class="container" >
+			      <div class="row-fluid" id="header">
+			      
+			      	<div class="span12">
+				  					<h1 class=""><center><img width="85px" height="85px" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR9Cl0MM-0_VrrRg5QNIiBZ05orVCkVa1cbRnt0wINO6qpWQLaP" ></img>  Bidding War </a></center></h1>
+				  		<span id="ohyeah"></span>
+				  	</div>
+			      </div>
+			    </div> 
+			   </div>
+   		 </div>
+    	<div class="container">  
+    
+
+        {% block body %}{% endblock %}
+        
+        </div>
+        </div>  
+     <div id="footer">
+      <div class="container">
+        <div class="row-fluid">
+        	
+        		<center>
+        		
+        			Copyright Phi LE 
+        		</center>
+        	</div>
+        </div>
+      </div>
+    </div>
+ 
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

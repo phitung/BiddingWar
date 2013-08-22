@@ -1,0 +1,14 @@
+acme_bidding:
+    resource: "@AcmeBiddingBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+acme_store:
+    resource: "@AcmeStoreBundle/Resources/config/routing.yml"
+    prefix:   /
+    
+acme_bidding:
+    resource: "@AcmeBiddingBundle/Resources/config/routing.yml"
+    prefix:   /    
+
+

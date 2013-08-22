@@ -1,0 +1,8 @@
+acme_bid_homepage:
+    pattern:  /
+    defaults: { _controller: AcmeBiddingBundle:Default:index }
+    
+acme_bid_create:
+    pattern:  /add-bid/{price}
+    defaults: { _controller: AcmeBiddingBundle:Default:addBid } 
+     

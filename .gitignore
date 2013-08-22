@@ -1,0 +1,10 @@
+.project
+.settings
+.metadata
+
+/app/cache/*
+/app/logs/*
+/vendor/
+/web/bundles/
+/bidding/node_modules/
+composer.phar
